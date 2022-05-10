@@ -5,6 +5,6 @@
   readonly picture?: string;
   readonly url: string;
   readonly shortId: string;
-  readonly views: number;
+  views: number;
   readonly isVisible?: boolean;
 }

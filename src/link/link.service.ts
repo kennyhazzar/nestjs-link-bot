@@ -37,7 +37,7 @@ export class LinkService {
       return null
     }
 
-    link.views + 1
+    link.views++
     link.save()
 
     return link.url
@@ -50,7 +50,7 @@ export class LinkService {
       return null
     }
 
-    link.views + 1
+    link.views++
     link.save()
 
     return { url: link.url, views: link.views, shortId: link.shortId, title: link.title }

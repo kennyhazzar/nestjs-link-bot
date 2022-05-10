@@ -9,7 +9,6 @@ import {
   Res,
 } from '@nestjs/common';
 import { Response } from 'express';
-import { ILink } from 'src/models/link.model';
 import { LinkService } from './link.service';
 
 @Controller('link')
@@ -52,13 +51,13 @@ export class LinkController {
   async getLinkInformation(@Param('id') id: string, @Res() response: Response) {
     try {
 
-      const link = await this.linkService.getLinkInformationById(id)
+      // const link = await this.linkService.getLinkInformationById(id)
 
-      if (!link) {
-        response.status(404).send({ error: "this link does not exist" })
-      }
-
-      return link
+      // if (!link) {
+      //   response.status(404).send({ error: "this link does not exist" })
+      // }
+      return `${id}`
+      // return link
     } catch (error) {
       response.status(500).send({ error: "something wrong in server" })
     }
