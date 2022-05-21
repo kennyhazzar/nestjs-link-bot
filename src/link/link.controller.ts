@@ -46,20 +46,4 @@ export class LinkController {
       response.status(500).send({ error: "something wrong in server" })
     }
   }
-
-  @Get(':id/view')
-  async getLinkInformation(@Param('id') id: string, @Res() response: Response) {
-    try {
-
-      // const link = await this.linkService.getLinkInformationById(id)
-
-      // if (!link) {
-      //   response.status(404).send({ error: "this link does not exist" })
-      // }
-      return `${id}`
-      // return link
-    } catch (error) {
-      response.status(500).send({ error: "something wrong in server" })
-    }
-  }
 }

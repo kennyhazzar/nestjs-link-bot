@@ -5,7 +5,7 @@ import axios, { AxiosResponse } from 'axios';
 import { Connection, Model } from 'mongoose';
 import { Observable } from 'rxjs';
 import { ILink } from 'src/models/link.model';
-import { LinkDocument } from 'src/link/schemas/link.schema';
+import { LinkDocument } from 'src/schemas/link.schema';
 import { DataDto } from './dto/data.dto';
 import { parse } from 'node-html-parser';
 import * as shortid from 'shortid'
@@ -41,18 +41,5 @@ export class LinkService {
     link.save()
 
     return link.url
-  }
-
-  async getLinkInformationById(shortId: string): Promise<ILink> | null {
-    const link = await this.linkModel.findOne({ shortId })
-
-    if (!link) {
-      return null
-    }
-
-    link.views++
-    link.save()
-
-    return { url: link.url, views: link.views, shortId: link.shortId, title: link.title }
   }
 }
