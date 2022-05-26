@@ -16,7 +16,7 @@ export class LinkController {
   constructor(private linkService: LinkService) { }
 
   @Get()
-  scrapperController(@Ip() ip): string {
+  linkController(@Ip() ip): string {
     return `main shit. your ip is ${ip}`
   }
 
