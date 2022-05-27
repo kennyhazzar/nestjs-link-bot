@@ -1,19 +1,15 @@
-import { HttpService } from '@nestjs/axios';
 import { Injectable } from '@nestjs/common';
 import { InjectConnection, InjectModel } from '@nestjs/mongoose';
-import axios, { AxiosResponse } from 'axios';
+import axios from 'axios';
 import { Connection, Model } from 'mongoose';
-import { Observable } from 'rxjs';
 import { ILink } from 'src/models/link.model';
 import { LinkDocument } from 'src/schemas/link.schema';
-import { DataDto } from './dto/data.dto';
 import { parse } from 'node-html-parser';
 import * as shortid from 'shortid'
 
 @Injectable()
 export class LinkService {
   constructor(
-    private httpService: HttpService,
     @InjectConnection() private connection: Connection,
     @InjectModel(ILink.name) private linkModel: Model<LinkDocument>,
   ) { }
@@ -28,6 +24,10 @@ export class LinkService {
 
   async findAll(): Promise<ILink[]> {
     return this.linkModel.find().exec()
+  }
+
+  async findLinksByTitle(title: string, userId?: string): Promise<ILink[]> {
+    return this.linkModel.find({ $text: { $search: title }, userId }).exec()
   }
 
   async getLinkById(shortId: string): Promise<string> | null {

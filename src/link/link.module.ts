@@ -10,7 +10,6 @@ import { LinkService } from './link.service';
   controllers: [LinkController],
   providers: [LinkService],
   imports: [
-    HttpModule,
     MongooseModule.forFeature([{ name: ILink.name, schema: LinkSchema }]),
   ],
 })

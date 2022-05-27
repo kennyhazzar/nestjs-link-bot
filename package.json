@@ -29,11 +29,13 @@
         "@nestjs/platform-express": "^8.0.0",
         "axios": "^0.27.2",
         "mongoose": "^6.3.2",
+        "nestjs-telegraf": "^2.4.1",
         "node-html-parser": "^5.3.3",
         "reflect-metadata": "^0.1.13",
         "rimraf": "^3.0.2",
         "rxjs": "^7.2.0",
-        "shortid": "^2.2.16"
+        "shortid": "^2.2.16",
+        "telegraf": "^4.8.2"
     },
     "devDependencies": {
         "@nestjs/cli": "^8.0.0",

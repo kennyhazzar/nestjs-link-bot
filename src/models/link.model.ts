@@ -7,4 +7,5 @@
   readonly shortId: string;
   views: number;
   readonly isVisible?: boolean;
+  readonly userId?: string;
 }

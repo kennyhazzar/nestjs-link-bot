@@ -30,6 +30,11 @@ export class LinkController {
     return this.linkService.findAll()
   }
 
+  @Get('find')
+  findLink(@Query('title') title) {
+    return this.linkService.findLinksByTitle(title)
+  }
+
   @Get(':id')
   @Redirect()
   async openShortLink(@Param('id') id: string, @Res() response: Response) {
