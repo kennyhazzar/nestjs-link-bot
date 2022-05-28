@@ -12,7 +12,7 @@ export class LinkService {
   constructor(
     @InjectConnection() private connection: Connection,
     @InjectModel(ILink.name) private linkModel: Model<LinkDocument>,
-  ) {}
+  ) { }
 
   async create(url: string, userId?: number) {
     const root = parse((await axios.get<string>(url)).data);
@@ -32,6 +32,10 @@ export class LinkService {
 
   async findAll(): Promise<ILink[]> {
     return this.linkModel.find().exec();
+  }
+
+  async findAllById(userId: number): Promise<ILink[]> {
+    return this.linkModel.find({ userId }).exec();
   }
 
   async findLinksByTitle(title: string, userId?: string): Promise<ILink[]> {

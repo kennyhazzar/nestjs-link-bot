@@ -6,6 +6,8 @@ import { TelegramService } from './telegram.service';
 
 @Update()
 export class TelegramUpdate {
+  constructor(private readonly telegramService: TelegramService) { }
+
   @Start()
   startCommand(ctx: Context) {
     ctx.replyWithHTML(
@@ -21,5 +23,13 @@ export class TelegramUpdate {
   @Command('stats')
   showLinkStats(ctx: Scenes.SceneContext) {
     ctx.scene.enter('view-by-full-url');
+  }
+
+  @Command('me')
+  async showLinksUser(ctx: Context) {
+    const links = await this.telegramService.getAllLinksByUser(ctx.chat.id)
+    ctx.replyWithHTML(`${links.length === 0 ? "У вас пока нету ссылок, но все впереди! /create" : "Твои ссылки (возможно тут будет пагинация):\n" + links.map((link, index) => {
+      return "\n" + `${index + 1}. <strong>${link.title}</strong> - ${process.env.HOST}/link/${link.shortId}`
+    }).join('')}`)
   }
 }
