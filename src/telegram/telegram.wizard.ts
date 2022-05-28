@@ -5,11 +5,11 @@ import { Markup, Scenes } from 'telegraf';
 import { toBuffer } from 'qrcode';
 import { ViewService } from 'src/view/view.service';
 
-const AbortMarkup = Markup.keyboard([['Прервать']]).resize()
+const AbortMarkup = Markup.keyboard([['Прервать']]).resize();
 
 @Wizard('create-link')
 export class CreateLinkWizard {
-  constructor(private readonly linkService: LinkService) { }
+  constructor(private readonly linkService: LinkService) {}
 
   @WizardStep(1)
   startCreatingLink(@Context() ctx: Scenes.WizardContext) {
@@ -33,26 +33,28 @@ export class CreateLinkWizard {
         return ctx.scene.leave();
       }
 
-      const { message_id } = await ctx.reply(`Создаем...`, Markup.removeKeyboard())
+      const { message_id } = await ctx.reply(
+        `Создаем...`,
+        Markup.removeKeyboard(),
+      );
 
       const result = await this.linkService.create(link, ctx.from.id);
 
       const shortUrl = `${process.env.HOST}/link/${result.shortId}`;
 
-      ctx.deleteMessage(message_id)
+      ctx.deleteMessage(message_id);
 
-      await ctx.replyWithPhoto({
-        source: await toBuffer(`${shortUrl}`, {
-          width: 400,
-        }),
-      },
-        Markup.inlineKeyboard([
-          Markup.button.url(shortUrl, shortUrl)
-        ])
+      await ctx.replyWithPhoto(
+        {
+          source: await toBuffer(`${shortUrl}`, {
+            width: 400,
+          }),
+        },
+        Markup.inlineKeyboard([Markup.button.url(shortUrl, shortUrl)]),
       );
       ctx.scene.leave();
     } catch (error) {
-      console.log(error)
+      console.log(error);
       await ctx.reply(
         'Кажется, что-то пошло не так на сервере:(\nПовторите попытку позже!',
         Markup.removeKeyboard(),
@@ -64,11 +66,14 @@ export class CreateLinkWizard {
 
 @Wizard('view-by-full-url')
 export class ViewByFullUrlWizard {
-  constructor(private readonly viewService: ViewService) { }
+  constructor(private readonly viewService: ViewService) {}
 
   @WizardStep(1)
   searchingLinkByUrl(@Context() ctx: Scenes.WizardContext) {
-    ctx.replyWithHTML('Вставь <strong>короткую ссылку (не оригинал)</strong>, статистику которой ты хочешь просмотреть\nПока что имеется возможность просматривать только количество переходов по ссылке', AbortMarkup);
+    ctx.replyWithHTML(
+      'Вставь <strong>короткую ссылку (не оригинал)</strong>, статистику которой ты хочешь просмотреть\nПока что имеется возможность просматривать только количество переходов по ссылке',
+      AbortMarkup,
+    );
     ctx.wizard.next();
   }
   @WizardStep(2)
@@ -88,17 +93,22 @@ export class ViewByFullUrlWizard {
         return ctx.scene.leave();
       }
 
-      const { message_id } = await ctx.reply(`Ищу...`, Markup.removeKeyboard())
+      const { message_id } = await ctx.reply(`Ищу...`, Markup.removeKeyboard());
 
-      const result = await this.viewService.getLinkInformationById(link.slice(-9))
+      const result = await this.viewService.getLinkInformationById(
+        link.slice(-9),
+      );
 
       if (!result) {
-        ctx.deleteMessage(message_id)
-        ctx.reply('Кажется, я ничего не нашел в своих чертогах...\nПопробуйте еще раз! /stats', Markup.removeKeyboard())
-        return ctx.scene.leave()
+        ctx.deleteMessage(message_id);
+        ctx.reply(
+          'Кажется, я ничего не нашел в своих чертогах...\nПопробуйте еще раз! /stats',
+          Markup.removeKeyboard(),
+        );
+        return ctx.scene.leave();
       }
 
-      ctx.deleteMessage(message_id)
+      ctx.deleteMessage(message_id);
 
       const { title, shortId, url, views } = result;
 
@@ -106,14 +116,17 @@ export class ViewByFullUrlWizard {
         `Заголовок страницы: <strong>${title}</strong>\nКоличество переходов: <strong>${views}</strong>
       `,
         Markup.inlineKeyboard([
-          Markup.button.url("Оригинал", url),
-          Markup.button.url("Короткая ссылка", `${process.env.HOST}/link/${shortId}`)
-        ])
-      )
+          Markup.button.url('Оригинал', url),
+          Markup.button.url(
+            'Короткая ссылка',
+            `${process.env.HOST}/link/${shortId}`,
+          ),
+        ]),
+      );
 
       ctx.scene.leave();
     } catch (error) {
-      console.log(error)
+      console.log(error);
       await ctx.reply(
         'Кажется, что-то пошло не так на сервере:(\nПовторите попытку позже!',
         Markup.removeKeyboard(),

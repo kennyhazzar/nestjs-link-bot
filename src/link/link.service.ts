@@ -12,7 +12,7 @@ export class LinkService {
   constructor(
     @InjectConnection() private connection: Connection,
     @InjectModel(ILink.name) private linkModel: Model<LinkDocument>,
-  ) { }
+  ) {}
 
   async create(url: string, userId?: number) {
     const root = parse((await axios.get<string>(url)).data);

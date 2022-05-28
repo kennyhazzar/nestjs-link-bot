@@ -8,7 +8,7 @@ import { ILink } from 'src/models/link.model';
 export class ViewService {
   constructor(
     @InjectModel(ILink.name) private linkModel: Model<LinkDocument>,
-  ) { }
+  ) {}
 
   async getLinkInformationById(shortId: string): Promise<ILink> | null {
     const link = await this.linkModel.findOne({ shortId });

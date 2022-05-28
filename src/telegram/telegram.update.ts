@@ -6,11 +6,10 @@ import { TelegramService } from './telegram.service';
 
 @Update()
 export class TelegramUpdate {
-
   @Start()
   startCommand(ctx: Context) {
     ctx.replyWithHTML(
-      'Доступны команды(alpha: v0.0.1):\n/stats - <strong>Просмотр статистики ссылки</strong>\n/create - <strong>Создание короткой ссылки</strong>\n/me - <strong>Список ваших ссылок</strong>'
+      'Доступны команды(alpha: v0.0.1):\n/stats - <strong>Просмотр статистики ссылки</strong>\n/create - <strong>Создание короткой ссылки</strong>\n/me - <strong>Список ваших ссылок</strong>',
     );
   }
 

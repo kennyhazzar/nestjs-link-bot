@@ -22,10 +22,10 @@ import { CreateLinkWizard, ViewByFullUrlWizard } from './telegram.wizard';
     LinkService,
     ViewService,
     CreateLinkWizard,
-    ViewByFullUrlWizard
+    ViewByFullUrlWizard,
   ],
   imports: [
     MongooseModule.forFeature([{ name: ILink.name, schema: LinkSchema }]),
   ],
 })
-export class TelegramModule { }
+export class TelegramModule {}
