@@ -1,4 +1,4 @@
-﻿export class ILink {
+export class ILink {
   readonly title: string;
   readonly subTitle?: string;
   readonly description?: string;
@@ -7,5 +7,5 @@
   readonly shortId: string;
   views: number;
   readonly isVisible?: boolean;
-  readonly userId?: string;
+  readonly userId?: number;
 }

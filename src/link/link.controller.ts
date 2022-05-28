@@ -13,11 +13,11 @@ import { LinkService } from './link.service';
 
 @Controller('link')
 export class LinkController {
-  constructor(private linkService: LinkService) { }
+  constructor(private linkService: LinkService) {}
 
   @Get()
   linkController(@Ip() ip): string {
-    return `main shit. your ip is ${ip}`
+    return `main shit. your ip is ${ip}`;
   }
 
   @Post('/create')
@@ -27,28 +27,27 @@ export class LinkController {
 
   @Get('/all')
   getAll() {
-    return this.linkService.findAll()
+    return this.linkService.findAll();
   }
 
   @Get('find')
   findLink(@Query('title') title) {
-    return this.linkService.findLinksByTitle(title)
+    return this.linkService.findLinksByTitle(title);
   }
 
   @Get(':id')
   @Redirect()
   async openShortLink(@Param('id') id: string, @Res() response: Response) {
-
     try {
-      const link = await this.linkService.getLinkById(id)
+      const link = await this.linkService.getLinkById(id);
 
       if (!link) {
-        return { url: '/' }
+        return { url: '/' };
       }
 
-      return { url: link }
+      return { url: link };
     } catch (error) {
-      response.status(500).send({ error: "something wrong in server" })
+      response.status(500).send({ error: 'something wrong in server' });
     }
   }
 }

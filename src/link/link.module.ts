@@ -13,4 +13,4 @@ import { LinkService } from './link.service';
     MongooseModule.forFeature([{ name: ILink.name, schema: LinkSchema }]),
   ],
 })
-export class LinkModule { }
+export class LinkModule {}

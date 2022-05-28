@@ -28,10 +28,10 @@ import { session } from 'telegraf';
     TelegramModule,
     TelegrafModule.forRoot({
       token: process.env.TELEGRAM_TOKEN,
-      middlewares: [session()]
+      middlewares: [session()],
     }),
   ],
   controllers: [LinkController, ViewController],
   providers: [LinkService, ViewService],
 })
-export class AppModule { }
+export class AppModule {}

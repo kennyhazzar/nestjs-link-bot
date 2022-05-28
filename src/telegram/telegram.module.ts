@@ -12,23 +12,20 @@ import { ViewService } from 'src/view/view.service';
 import { TelegramController } from './telegram.controller';
 import { TelegramService } from './telegram.service';
 import { TelegramUpdate } from './telegram.update';
-import { CreateLinkWizard } from './telegram.wizard';
+import { CreateLinkWizard, ViewByFullUrlWizard } from './telegram.wizard';
 
 @Module({
-  controllers: [
-    TelegramController,
-    LinkController,
-    ViewController
-  ],
+  controllers: [TelegramController, LinkController, ViewController],
   providers: [
     TelegramService,
     TelegramUpdate,
     LinkService,
     ViewService,
-    CreateLinkWizard
+    CreateLinkWizard,
+    ViewByFullUrlWizard
   ],
   imports: [
     MongooseModule.forFeature([{ name: ILink.name, schema: LinkSchema }]),
-  ]
+  ],
 })
 export class TelegramModule { }

@@ -6,7 +6,6 @@ import { ViewService } from './view.service';
 import { LinkSchema } from 'src/schemas/link.schema';
 import { HttpModule } from '@nestjs/axios';
 
-
 @Module({
   providers: [ViewService],
   controllers: [ViewController],
@@ -15,4 +14,4 @@ import { HttpModule } from '@nestjs/axios';
     MongooseModule.forFeature([{ name: ILink.name, schema: LinkSchema }]),
   ],
 })
-export class ViewModule { }
+export class ViewModule {}

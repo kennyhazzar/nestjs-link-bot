@@ -1,4 +1,4 @@
-﻿import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
+import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document } from 'mongoose';
 import { ILink } from 'src/models/link.model';
 
@@ -24,13 +24,13 @@ export class Link {
   @Prop({ required: true, text: true, index: true })
   shortId: string;
 
-  @Prop({ default: 0 })
+  @Prop({ required: true, default: 0 })
   views: number;
 
-  @Prop({ default: true })
+  @Prop({ required: true, default: true })
   isVisible: boolean;
-  @Prop({ default: false })
-  userId: string;
+  @Prop({ required: false })
+  userId: number;
 }
 
 export const LinkSchema = SchemaFactory.createForClass(Link);
