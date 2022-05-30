@@ -27,8 +27,8 @@ export class Link {
   @Prop({ required: true, default: 0 })
   views: number;
 
-  @Prop({ required: true, default: true })
-  isVisible: boolean;
+  @Prop({ required: true })
+  isSub: boolean;
   @Prop({ required: false })
   userId: number;
 }

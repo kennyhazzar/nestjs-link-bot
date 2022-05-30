@@ -6,13 +6,16 @@ import { ILink } from 'src/models/link.model';
 import { LinkDocument } from 'src/schemas/link.schema';
 import { parse } from 'node-html-parser';
 import * as shortid from 'shortid';
+import { InjectBot } from 'nestjs-telegraf';
+import { Telegraf } from 'telegraf';
 
 @Injectable()
 export class LinkService {
   constructor(
     @InjectConnection() private connection: Connection,
     @InjectModel(ILink.name) private linkModel: Model<LinkDocument>,
-  ) { }
+    @InjectBot() private bot: Telegraf,
+  ) {}
 
   async create(url: string, userId?: number) {
     const root = parse((await axios.get<string>(url)).data);
@@ -26,6 +29,7 @@ export class LinkService {
       shortId: shortid.generate(),
       subTitle,
       userId,
+      isSub: false,
     });
     return createdLink.save();
   }
@@ -49,9 +53,26 @@ export class LinkService {
       return null;
     }
 
+    if (link.isSub && link.userId) {
+      this.bot.telegram.sendMessage(link.userId, `По вашей ссылке прошли`);
+    }
+
     link.views++;
     link.save();
 
     return link.url;
+  }
+
+  async subscribeUserToLinkByLink(shortId: string): Promise<boolean> {
+    const link = await this.linkModel.findOne({ shortId });
+    if (link) {
+      await this.linkModel.updateOne(
+        { shortId },
+        { $set: { isSub: !link.isSub } },
+      );
+      return true;
+    }
+
+    return false;
   }
 }

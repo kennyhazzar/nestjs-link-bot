@@ -9,7 +9,7 @@ const AbortMarkup = Markup.keyboard([['Прервать']]).resize();
 
 @Wizard('create-link')
 export class CreateLinkWizard {
-  constructor(private readonly linkService: LinkService) { }
+  constructor(private readonly linkService: LinkService) {}
 
   @WizardStep(1)
   startCreatingLink(@Context() ctx: Scenes.WizardContext) {
@@ -25,6 +25,7 @@ export class CreateLinkWizard {
         await ctx.reply('Создание ссылки прервано', Markup.removeKeyboard());
         return ctx.scene.leave();
       }
+
       if (link.search(URL_EXP) === -1) {
         await ctx.reply(
           'Кажется, это не ссылка. Попробуйте еще раз! /create',
@@ -66,7 +67,7 @@ export class CreateLinkWizard {
 
 @Wizard('view-by-full-url')
 export class ViewByFullUrlWizard {
-  constructor(private readonly viewService: ViewService) { }
+  constructor(private readonly viewService: ViewService) {}
 
   @WizardStep(1)
   searchingLinkByUrl(@Context() ctx: Scenes.WizardContext) {
@@ -85,6 +86,7 @@ export class ViewByFullUrlWizard {
         await ctx.reply('Поиск статистики прерван', Markup.removeKeyboard());
         return ctx.scene.leave();
       }
+
       if (link.search(URL_EXP) === -1) {
         await ctx.reply(
           'Кажется, это не ссылка. Попробуйте еще раз! /stats',
@@ -132,6 +134,60 @@ export class ViewByFullUrlWizard {
         Markup.removeKeyboard(),
       );
       ctx.scene.leave();
+    }
+  }
+}
+
+@Wizard('subscribe-to-update')
+export class subscribeToUpdate {
+  constructor(private readonly linkService: LinkService) {}
+
+  @WizardStep(1)
+  async startSubscribing(@Context() ctx: Scenes.WizardContext) {
+    ctx.replyWithHTML(
+      `Введи ссылку, на которую ты хочешь подписаться!`,
+      AbortMarkup,
+    );
+    ctx.wizard.next();
+  }
+  @WizardStep(2)
+  async acceptLink(@Context() ctx: Scenes.WizardContext) {
+    try {
+      const link = (ctx as any).message.text as string;
+
+      if (link === 'Прервать') {
+        await ctx.reply('Создание ссылки прервано', Markup.removeKeyboard());
+        return ctx.scene.leave();
+      }
+
+      if (link.search(URL_EXP) === -1) {
+        await ctx.reply(
+          'Кажется, это не ссылка. Попробуйте еще раз! /create',
+          Markup.removeKeyboard(),
+        );
+        return ctx.scene.leave();
+      }
+
+      const { message_id } = await ctx.reply(
+        'Подписываемся...',
+        Markup.removeKeyboard(),
+      );
+      const result = await this.linkService.subscribeUserToLinkByLink(
+        link.slice(-9),
+      );
+      ctx.deleteMessage(message_id);
+
+      if (!result) {
+        ctx.reply(
+          `Кажется, я не нашел в своих чертогах эту ссылку...Попробуйте еще раз! /subscribe`,
+          Markup.removeKeyboard(),
+        );
+        return ctx.scene.leave();
+      }
+      ctx.reply(`Вы подписаны на ссылку ${link}`, Markup.removeKeyboard());
+      return ctx.scene.leave();
+    } catch (error) {
+      console.log(error);
     }
   }
 }

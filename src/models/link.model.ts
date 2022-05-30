@@ -6,6 +6,6 @@ export class ILink {
   readonly url: string;
   readonly shortId: string;
   views: number;
-  readonly isVisible?: boolean;
+  readonly isSub?: boolean;
   readonly userId?: number;
 }
