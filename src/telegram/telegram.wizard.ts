@@ -9,7 +9,7 @@ const AbortMarkup = Markup.keyboard([['Прервать']]).resize();
 
 @Wizard('create-link')
 export class CreateLinkWizard {
-  constructor(private readonly linkService: LinkService) {}
+  constructor(private readonly linkService: LinkService) { }
 
   @WizardStep(1)
   startCreatingLink(@Context() ctx: Scenes.WizardContext) {
@@ -66,7 +66,7 @@ export class CreateLinkWizard {
 
 @Wizard('view-by-full-url')
 export class ViewByFullUrlWizard {
-  constructor(private readonly viewService: ViewService) {}
+  constructor(private readonly viewService: ViewService) { }
 
   @WizardStep(1)
   searchingLinkByUrl(@Context() ctx: Scenes.WizardContext) {

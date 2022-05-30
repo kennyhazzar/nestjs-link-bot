@@ -1,6 +1,4 @@
 ﻿import { Command, Help, Start, Update } from 'nestjs-telegraf';
-import { LinkService } from 'src/link/link.service';
-import { ViewService } from 'src/view/view.service';
 import { Context, Scenes } from 'telegraf';
 import { TelegramService } from './telegram.service';
 
