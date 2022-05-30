@@ -12,7 +12,6 @@ import { Telegraf } from 'telegraf';
 @Injectable()
 export class LinkService {
   constructor(
-    @InjectConnection() private connection: Connection,
     @InjectModel(ILink.name) private linkModel: Model<LinkDocument>,
     @InjectBot() private bot: Telegraf,
   ) {}
@@ -46,15 +45,24 @@ export class LinkService {
     return this.linkModel.find({ $text: { $search: title }, userId }).exec();
   }
 
-  async getLinkById(shortId: string): Promise<string> | null {
+  async getLinkById(
+    shortId: string,
+    userAgent: string,
+    ip?: string,
+  ): Promise<string> | null {
     const link = await this.linkModel.findOne({ shortId });
-
     if (!link) {
       return null;
     }
 
     if (link.isSub && link.userId) {
-      this.bot.telegram.sendMessage(link.userId, `По вашей ссылке прошли`);
+      this.bot.telegram.sendMessage(
+        link.userId,
+        `По вашей ссылке прошли!\n<strong>IP</strong>: ${ip}\nУстройство:\n<strong>${userAgent}</strong>`,
+        {
+          parse_mode: 'HTML',
+        },
+      );
     }
 
     link.views++;
@@ -63,16 +71,18 @@ export class LinkService {
     return link.url;
   }
 
-  async subscribeUserToLinkByLink(shortId: string): Promise<boolean> {
+  async subscribeUserToLinkByLink(
+    shortId: string,
+  ): Promise<{ result: boolean; state: boolean }> {
     const link = await this.linkModel.findOne({ shortId });
     if (link) {
       await this.linkModel.updateOne(
         { shortId },
         { $set: { isSub: !link.isSub } },
       );
-      return true;
+      return { result: true, state: !link.isSub };
     }
 
-    return false;
+    return { result: false, state: !link.isSub };
   }
 }

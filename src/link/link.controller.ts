@@ -1,13 +1,15 @@
 import {
   Controller,
   Get,
+  Ip,
   Param,
   Post,
   Query,
   Redirect,
+  Req,
   Res,
 } from '@nestjs/common';
-import { Response } from 'express';
+import { Request, Response } from 'express';
 import { LinkService } from './link.service';
 
 @Controller('link')
@@ -46,9 +48,18 @@ export class LinkController {
 
   @Get(':id')
   @Redirect()
-  async openShortLink(@Param('id') id: string, @Res() response: Response) {
+  async openShortLink(
+    @Param('id') id: string,
+    @Ip() ip: string,
+    @Req() request: Request,
+    @Res() response: Response,
+  ) {
     try {
-      const link = await this.linkService.getLinkById(id);
+      const link = await this.linkService.getLinkById(
+        id,
+        request.headers['user-agent'],
+        ip,
+      );
 
       if (!link) {
         return { url: '/' };

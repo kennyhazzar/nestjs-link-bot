@@ -145,7 +145,7 @@ export class subscribeToUpdate {
   @WizardStep(1)
   async startSubscribing(@Context() ctx: Scenes.WizardContext) {
     ctx.replyWithHTML(
-      `Введи ссылку, на которую ты хочешь подписаться!`,
+      `Введи ссылку, на которую ты хочешь подписаться или отписаться!`,
       AbortMarkup,
     );
     ctx.wizard.next();
@@ -156,7 +156,7 @@ export class subscribeToUpdate {
       const link = (ctx as any).message.text as string;
 
       if (link === 'Прервать') {
-        await ctx.reply('Создание ссылки прервано', Markup.removeKeyboard());
+        await ctx.reply('Процесс подписки остановлен', Markup.removeKeyboard());
         return ctx.scene.leave();
       }
 
@@ -169,12 +169,11 @@ export class subscribeToUpdate {
       }
 
       const { message_id } = await ctx.reply(
-        'Подписываемся...',
+        'Работаем...',
         Markup.removeKeyboard(),
       );
-      const result = await this.linkService.subscribeUserToLinkByLink(
-        link.slice(-9),
-      );
+      const { result, state } =
+        await this.linkService.subscribeUserToLinkByLink(link.slice(-9));
       ctx.deleteMessage(message_id);
 
       if (!result) {
@@ -184,7 +183,12 @@ export class subscribeToUpdate {
         );
         return ctx.scene.leave();
       }
-      ctx.reply(`Вы подписаны на ссылку ${link}`, Markup.removeKeyboard());
+      ctx.reply(
+        `Вы ${
+          state ? 'подписаны на ссылку' : 'отписались от ссылки'
+        } ${link}\nЧтобы отписаться, воспользуйтесь командой вновь`,
+        Markup.removeKeyboard(),
+      );
       return ctx.scene.leave();
     } catch (error) {
       console.log(error);
