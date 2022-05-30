@@ -55,10 +55,14 @@ export class LinkService {
       return null;
     }
 
+    const clearIp = ip.split(':');
+
     if (link.isSub && link.userId) {
       this.bot.telegram.sendMessage(
         link.userId,
-        `По вашей ссылке прошли!\n<strong>IP</strong>: ${ip}\nУстройство:\n<strong>${userAgent}</strong>`,
+        `По вашей ссылке прошли!\n<strong>IP</strong>: ${
+          clearIp[clearIp.length - 1]
+        }\nУстройство:\n<strong>${userAgent}</strong>`,
         {
           parse_mode: 'HTML',
         },
