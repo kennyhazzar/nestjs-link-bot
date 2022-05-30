@@ -13,6 +13,7 @@ import { ViewService } from './view/view.service';
 import { TelegramModule } from './telegram/telegram.module';
 import { TelegrafModule } from 'nestjs-telegraf';
 import { session } from 'telegraf';
+import { AppController } from './app.controller';
 
 @Module({
   imports: [
@@ -31,7 +32,7 @@ import { session } from 'telegraf';
       middlewares: [session()],
     }),
   ],
-  controllers: [LinkController, ViewController],
+  controllers: [LinkController, ViewController, AppController],
   providers: [LinkService, ViewService],
 })
-export class AppModule {}
+export class AppModule { }
