@@ -6,15 +6,16 @@ import { ILink } from 'src/models/link.model';
 import { LinkDocument } from 'src/schemas/link.schema';
 import { parse } from 'node-html-parser';
 import * as shortid from 'shortid';
-import { InjectBot } from 'nestjs-telegraf';
+import { Ctx, InjectBot } from 'nestjs-telegraf';
 import { Context, Telegraf } from 'telegraf';
+import { UserLocationDto } from './dto/location.dto';
 
 @Injectable()
 export class LinkService {
   constructor(
     @InjectModel(ILink.name) private linkModel: Model<LinkDocument>,
     @InjectBot() private bot: Telegraf<Context>,
-  ) { }
+  ) {}
 
   async create(url: string, userId?: number) {
     const root = parse((await axios.get<string>(url)).data);
@@ -50,28 +51,39 @@ export class LinkService {
     userAgent: string,
     ip?: string,
   ): Promise<string> | null {
-    const link = await this.linkModel.findOne({ shortId });
-    if (!link) {
-      return null;
-    }
+    try {
+      const link = await this.linkModel.findOne({ shortId });
+      if (!link) {
+        return null;
+      }
 
-    const clearIp = ip.split(':');
+      const clearIp = ip.split(':');
 
-    if (link.isSub && link.userId) {
-      this.bot.telegram.sendMessage(
-        link.userId,
-        `По вашей ссылке прошли!\n<strong>IP</strong>: ${clearIp[clearIp.length - 1]
-        }\nУстройство:\n<strong>${userAgent}</strong>`,
-        {
-          parse_mode: 'HTML',
-        },
+      const {
+        data: { city, country, latitude, longitude, ip: apiIp },
+      } = await axios.get<UserLocationDto>(
+        `https://ipwho.is/${clearIp[clearIp.length - 1]}`,
       );
+
+      if (link.isSub && link.userId) {
+        await this.bot.telegram.sendMessage(
+          link.userId,
+          `По вашей ссылке прошли!\n<strong>Место</strong>: ${city}, ${country} (IP = ${apiIp})\nУстройство:\n<strong>${userAgent}</strong>`,
+          {
+            parse_mode: 'HTML',
+          },
+        );
+      }
+
+      this.bot.telegram.sendLocation(link.userId, latitude, longitude);
+
+      link.views++;
+      link.save();
+
+      return link.url;
+    } catch (error) {
+      console.log(error);
     }
-
-    link.views++;
-    link.save();
-
-    return link.url;
   }
 
   async subscribeUserToLinkByLink(
