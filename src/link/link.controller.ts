@@ -14,7 +14,7 @@ import { LinkService } from './link.service';
 
 @Controller('link')
 export class LinkController {
-  constructor(private linkService: LinkService) {}
+  constructor(private linkService: LinkService) { }
 
   @Post('/create')
   createLink(@Query('link') link, @Res() response: Response) {
@@ -58,7 +58,7 @@ export class LinkController {
       const link = await this.linkService.getLinkById(
         id,
         request.headers['user-agent'],
-        request.connection.remoteAddress || request.socket.remoteAddress,
+        ((request.headers['x-forwarded-for'] || request.socket.remoteAddress || '') as any).split(',')[0].trim(),
       );
 
       if (!link) {
