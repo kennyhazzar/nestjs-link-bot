@@ -6,7 +6,7 @@ import { ILink } from 'src/models/link.model';
 import { LinkDocument } from 'src/schemas/link.schema';
 import { parse } from 'node-html-parser';
 import * as shortid from 'shortid';
-import { Ctx, InjectBot } from 'nestjs-telegraf';
+import { InjectBot } from 'nestjs-telegraf';
 import { Context, Telegraf } from 'telegraf';
 import { UserLocationDto } from './dto/location.dto';
 
@@ -57,15 +57,14 @@ export class LinkService {
         return null;
       }
 
-      const clearIp = ip.split(':');
-
-      const {
-        data: { city, country, latitude, longitude, ip: apiIp },
-      } = await axios.get<UserLocationDto>(
-        `https://ipwho.is/${clearIp[clearIp.length - 1]}`,
-      );
-
       if (link.isSub && link.userId) {
+        const clearIp = ip.split(':');
+
+        const {
+          data: { city, country, latitude, longitude, ip: apiIp },
+        } = await axios.get<UserLocationDto>(
+          `https://ipwho.is/${clearIp[clearIp.length - 1]}`,
+        );
         await this.bot.telegram.sendMessage(
           link.userId,
           `По вашей ссылке прошли!\n<strong>Место</strong>: ${city}, ${country} (IP = ${apiIp})\nУстройство:\n<strong>${userAgent}</strong>`,
@@ -73,9 +72,8 @@ export class LinkService {
             parse_mode: 'HTML',
           },
         );
+        this.bot.telegram.sendLocation(link.userId, latitude, longitude);
       }
-
-      this.bot.telegram.sendLocation(link.userId, latitude, longitude);
 
       link.views++;
       link.save();
