@@ -1,19 +1,19 @@
 import { Injectable } from '@nestjs/common';
-import { InjectConnection, InjectModel } from '@nestjs/mongoose';
+import { InjectModel } from '@nestjs/mongoose';
 import axios from 'axios';
-import { Connection, Model } from 'mongoose';
+import { Model } from 'mongoose';
 import { ILink } from 'src/models/link.model';
 import { LinkDocument } from 'src/schemas/link.schema';
 import { parse } from 'node-html-parser';
 import * as shortid from 'shortid';
 import { InjectBot } from 'nestjs-telegraf';
-import { Telegraf } from 'telegraf';
+import { Context, Telegraf } from 'telegraf';
 
 @Injectable()
 export class LinkService {
   constructor(
     @InjectModel(ILink.name) private linkModel: Model<LinkDocument>,
-    @InjectBot() private bot: Telegraf,
+    @InjectBot() private bot: Telegraf<Context>,
   ) {}
 
   async create(url: string, userId?: number) {

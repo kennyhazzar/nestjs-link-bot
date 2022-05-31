@@ -58,7 +58,7 @@ export class LinkController {
       const link = await this.linkService.getLinkById(
         id,
         request.headers['user-agent'],
-        ip,
+        request.connection.remoteAddress || request.socket.remoteAddress,
       );
 
       if (!link) {
