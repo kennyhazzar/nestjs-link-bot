@@ -28,4 +28,4 @@ import { ViewByFullUrlWizard } from './wizards/view-by-full-url.wizard';
     MongooseModule.forFeature([{ name: ILink.name, schema: LinkSchema }]),
   ],
 })
-export class TelegramModule { }
+export class TelegramModule {}

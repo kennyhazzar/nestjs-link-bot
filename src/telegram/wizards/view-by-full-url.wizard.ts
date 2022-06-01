@@ -1,12 +1,12 @@
-import { Context, Wizard, WizardStep } from "nestjs-telegraf";
-import { AbortMarkup } from "src/constants/AbortMarkup";
-import { URL_EXP } from "src/constants/URL";
-import { ViewService } from "src/view/view.service";
-import { Markup, Scenes } from "telegraf";
+import { Context, Wizard, WizardStep } from 'nestjs-telegraf';
+import { AbortMarkup } from 'src/constants/AbortMarkup';
+import { URL_EXP } from 'src/constants/URL';
+import { ViewService } from 'src/view/view.service';
+import { Markup, Scenes } from 'telegraf';
 
 @Wizard('view-by-full-url')
 export class ViewByFullUrlWizard {
-  constructor(private readonly viewService: ViewService) { }
+  constructor(private readonly viewService: ViewService) {}
 
   @WizardStep(1)
   searchingLinkByUrl(@Context() ctx: Scenes.WizardContext) {
@@ -60,7 +60,7 @@ export class ViewByFullUrlWizard {
           Markup.button.url('Оригинал', url),
           Markup.button.url(
             'Короткая ссылка',
-            `${process.env.HOST}/link/${shortId}`,
+            `${process.env.HOST}/${shortId}`,
           ),
         ]),
       );

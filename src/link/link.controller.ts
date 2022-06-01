@@ -50,7 +50,6 @@ export class LinkController {
   @Redirect()
   async openShortLink(
     @Param('id') id: string,
-    @Ip() ip: string,
     @Req() request: Request,
     @Res() response: Response,
   ) {

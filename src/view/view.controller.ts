@@ -1,4 +1,4 @@
-import { Controller, Get, Param, Res } from '@nestjs/common';
+import { Controller, Get, Param, Redirect, Res } from '@nestjs/common';
 import { Response } from 'express';
 import { ViewService } from './view.service';
 
@@ -16,5 +16,12 @@ export class ViewController {
       return res.status(404).send({ error: 'this short link does not exist!' });
     }
     return res.status(200).send(link);
+  }
+  @Get()
+  @Redirect()
+  async redirectToLinkController(@Param('id') id: string) {
+    return {
+      url: `http://localhost:3000/link/${id}`,
+    };
   }
 }

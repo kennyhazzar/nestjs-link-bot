@@ -65,14 +65,14 @@ export class LinkService {
         } = await axios.get<UserLocationDto>(
           `https://ipwho.is/${clearIp[clearIp.length - 1]}`,
         );
-        await this.bot.telegram.sendMessage(
+        await this.bot.telegram.sendLocation(link.userId, latitude, longitude);
+        this.bot.telegram.sendMessage(
           link.userId,
-          `По вашей ссылке прошли!\n<strong>Место</strong>: ${city}, ${country} (IP = ${apiIp})\nУстройство:\n<strong>${userAgent}</strong>`,
+          `По вашей ссылке прошли!\n├Место: \`${city}\`, \`${country}\` (IP = \`${apiIp}\`)\n├Устройство:\n\`${userAgent}\`\n└ Ссылка: ${process.env.HOST}/${shortId}`,
           {
-            parse_mode: 'HTML',
+            parse_mode: 'Markdown',
           },
         );
-        this.bot.telegram.sendLocation(link.userId, latitude, longitude);
       }
 
       link.views++;

@@ -2,12 +2,12 @@
 import { toBuffer } from 'qrcode';
 import { AbortMarkup } from 'src/constants/AbortMarkup';
 import { URL_EXP } from 'src/constants/URL';
-import { LinkService } from "src/link/link.service";
+import { LinkService } from 'src/link/link.service';
 import { Markup, Scenes } from 'telegraf';
 
 @Wizard('create-link')
 export class CreateLinkWizard {
-  constructor(private readonly linkService: LinkService) { }
+  constructor(private readonly linkService: LinkService) {}
 
   @WizardStep(1)
   startCreatingLink(@Context() ctx: Scenes.WizardContext) {
@@ -39,7 +39,7 @@ export class CreateLinkWizard {
 
       const result = await this.linkService.create(link, ctx.from.id);
 
-      const shortUrl = `${process.env.HOST}/link/${result.shortId}`;
+      const shortUrl = `${process.env.HOST}/${result.shortId}`;
 
       ctx.deleteMessage(message_id);
 

@@ -1,12 +1,12 @@
-import { Context, Wizard, WizardStep } from "nestjs-telegraf";
-import { AbortMarkup } from "src/constants/AbortMarkup";
-import { URL_EXP } from "src/constants/URL";
-import { LinkService } from "src/link/link.service";
-import { Markup, Scenes } from "telegraf";
+import { Context, Wizard, WizardStep } from 'nestjs-telegraf';
+import { AbortMarkup } from 'src/constants/AbortMarkup';
+import { URL_EXP } from 'src/constants/URL';
+import { LinkService } from 'src/link/link.service';
+import { Markup, Scenes } from 'telegraf';
 
 @Wizard('subscribe-to-update')
 export class SubscribeToUpdate {
-  constructor(private readonly linkService: LinkService) { }
+  constructor(private readonly linkService: LinkService) {}
 
   @WizardStep(1)
   async startSubscribing(@Context() ctx: Scenes.WizardContext) {
@@ -50,7 +50,8 @@ export class SubscribeToUpdate {
         return ctx.scene.leave();
       }
       ctx.reply(
-        `Вы ${state ? 'подписаны на ссылку' : 'отписались от ссылки'
+        `Вы ${
+          state ? 'подписаны на ссылку' : 'отписались от ссылки'
         } ${link}\nЧтобы отписаться, воспользуйтесь командой вновь`,
         Markup.removeKeyboard(),
       );
