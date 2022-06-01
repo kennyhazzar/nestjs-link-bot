@@ -1,22 +1,17 @@
-import { HttpService } from '@nestjs/axios';
 import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
 import { LinkController } from 'src/link/link.controller';
-import { LinkModule } from 'src/link/link.module';
 import { LinkService } from 'src/link/link.service';
 import { ILink } from 'src/models/link.model';
 import { LinkSchema } from 'src/schemas/link.schema';
 import { ViewController } from 'src/view/view.controller';
-import { ViewModule } from 'src/view/view.module';
 import { ViewService } from 'src/view/view.service';
 import { TelegramController } from './telegram.controller';
 import { TelegramService } from './telegram.service';
 import { TelegramUpdate } from './telegram.update';
-import {
-  CreateLinkWizard,
-  subscribeToUpdate,
-  ViewByFullUrlWizard,
-} from './telegram.wizard';
+import { CreateLinkWizard } from './wizards/create-link.wizard';
+import { SubscribeToUpdate } from './wizards/subscribe-to-update.wizard';
+import { ViewByFullUrlWizard } from './wizards/view-by-full-url.wizard';
 
 @Module({
   controllers: [TelegramController, LinkController, ViewController],
@@ -27,10 +22,10 @@ import {
     ViewService,
     CreateLinkWizard,
     ViewByFullUrlWizard,
-    subscribeToUpdate,
+    SubscribeToUpdate,
   ],
   imports: [
     MongooseModule.forFeature([{ name: ILink.name, schema: LinkSchema }]),
   ],
 })
-export class TelegramModule {}
+export class TelegramModule { }
