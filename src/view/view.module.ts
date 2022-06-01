@@ -5,9 +5,10 @@ import { ViewController } from './view.controller';
 import { ViewService } from './view.service';
 import { LinkSchema } from 'src/schemas/link.schema';
 import { HttpModule } from '@nestjs/axios';
+import { LinkService } from 'src/link/link.service';
 
 @Module({
-  providers: [ViewService],
+  providers: [ViewService, LinkService],
   controllers: [ViewController],
   imports: [
     HttpModule,

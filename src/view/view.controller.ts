@@ -1,10 +1,14 @@
-import { Controller, Get, Param, Redirect, Res } from '@nestjs/common';
+import { Controller, Get, Param, Post, Redirect, Res } from '@nestjs/common';
 import { Response } from 'express';
+import { LinkService } from 'src/link/link.service';
 import { ViewService } from './view.service';
 
 @Controller(':id')
 export class ViewController {
-  constructor(private viewService: ViewService) {}
+  constructor(
+    private readonly viewService: ViewService,
+    private readonly linkService: LinkService,
+  ) {}
 
   @Get('view')
   async getText(
@@ -23,5 +27,11 @@ export class ViewController {
     return {
       url: `${process.env.HOST}/link/${id}`,
     };
+  }
+
+  @Post('subscribe')
+  async subscribeUserToLink(@Param('id') id: string) {
+    const result = await this.linkService.subscribeUserToLinkByLink(id);
+    return result;
   }
 }

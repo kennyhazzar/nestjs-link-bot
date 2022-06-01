@@ -9,6 +9,7 @@ import * as shortid from 'shortid';
 import { InjectBot } from 'nestjs-telegraf';
 import { Context, Telegraf } from 'telegraf';
 import { UserLocationDto } from './dto/location.dto';
+import { SubscribeDto } from './dto/subscribe.dto';
 
 @Injectable()
 export class LinkService {
@@ -85,9 +86,7 @@ export class LinkService {
     }
   }
 
-  async subscribeUserToLinkByLink(
-    shortId: string,
-  ): Promise<{ result: boolean; state: boolean }> {
+  async subscribeUserToLinkByLink(shortId: string): Promise<SubscribeDto> {
     const link = await this.linkModel.findOne({ shortId });
     if (link) {
       await this.linkModel.updateOne(
@@ -97,6 +96,6 @@ export class LinkService {
       return { result: true, state: !link.isSub };
     }
 
-    return { result: false, state: !link.isSub };
+    return { result: false, state: null };
   }
 }
