@@ -42,11 +42,14 @@ export class TelegramUpdate {
                   '\n' +
                   `${index + 1}. <strong>${link.title}</strong> - ${
                     process.env.HOST
-                  }/link/${link.shortId}`
+                  }/${link.shortId}`
                 );
               })
               .join('')
       }`,
+      {
+        disable_web_page_preview: true,
+      },
     );
   }
 }
