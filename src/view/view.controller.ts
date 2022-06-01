@@ -21,7 +21,7 @@ export class ViewController {
   @Redirect()
   async redirectToLinkController(@Param('id') id: string) {
     return {
-      url: `http://localhost:3000/link/${id}`,
+      url: `${process.env.HOST}/link/${id}`,
     };
   }
 }

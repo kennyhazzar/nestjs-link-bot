@@ -15,7 +15,7 @@ export class LinkService {
   constructor(
     @InjectModel(ILink.name) private linkModel: Model<LinkDocument>,
     @InjectBot() private bot: Telegraf<Context>,
-  ) { }
+  ) {}
 
   async create(url: string, userId?: number) {
     const root = parse((await axios.get<string>(url)).data);
