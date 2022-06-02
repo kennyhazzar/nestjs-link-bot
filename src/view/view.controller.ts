@@ -3,7 +3,6 @@ import {
   Get,
   Param,
   Post,
-  Query,
   Redirect,
   Res,
 } from '@nestjs/common';
@@ -11,12 +10,12 @@ import { Response } from 'express';
 import { LinkService } from 'src/link/link.service';
 import { ViewService } from './view.service';
 
-@Controller(':id')
+@Controller('/api/:id')
 export class ViewController {
   constructor(
     private readonly viewService: ViewService,
     private readonly linkService: LinkService,
-  ) {}
+  ) { }
 
   @Get('view')
   async getText(

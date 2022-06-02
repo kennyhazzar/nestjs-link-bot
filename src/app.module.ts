@@ -16,6 +16,7 @@ import { session } from 'telegraf';
 import { AppController } from './app.controller';
 import { HistorySchema } from './schemas/history.schema';
 import { IHistory } from './models/history.model';
+import { RouterModule } from '@nestjs/core';
 
 @Module({
   imports: [
@@ -38,4 +39,4 @@ import { IHistory } from './models/history.model';
   controllers: [LinkController, ViewController, AppController],
   providers: [LinkService, ViewService],
 })
-export class AppModule {}
+export class AppModule { }

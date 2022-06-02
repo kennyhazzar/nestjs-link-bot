@@ -11,9 +11,9 @@ import {
 import { Request, Response } from 'express';
 import { LinkService } from './link.service';
 
-@Controller('link')
+@Controller('/api/link')
 export class LinkController {
-  constructor(private linkService: LinkService) {}
+  constructor(private linkService: LinkService) { }
 
   @Post('/create')
   async createLink(
