@@ -1,4 +1,12 @@
-import { Controller, Get, Param, Post, Redirect, Res } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Param,
+  Post,
+  Query,
+  Redirect,
+  Res,
+} from '@nestjs/common';
 import { Response } from 'express';
 import { LinkService } from 'src/link/link.service';
 import { ViewService } from './view.service';
@@ -33,5 +41,10 @@ export class ViewController {
   async subscribeUserToLink(@Param('id') id: string) {
     const result = await this.linkService.subscribeUserToLinkByLink(id);
     return result;
+  }
+
+  @Get('history')
+  async getLinkHistoryById(@Param('id') id: string) {
+    return await this.viewService.getLinkHistory(id);
   }
 }

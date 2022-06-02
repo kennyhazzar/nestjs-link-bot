@@ -6,6 +6,8 @@ import { ViewService } from './view.service';
 import { LinkSchema } from 'src/schemas/link.schema';
 import { HttpModule } from '@nestjs/axios';
 import { LinkService } from 'src/link/link.service';
+import { HistorySchema } from 'src/schemas/history.schema';
+import { IHistory } from 'src/models/history.model';
 
 @Module({
   providers: [ViewService, LinkService],
@@ -13,6 +15,7 @@ import { LinkService } from 'src/link/link.service';
   imports: [
     HttpModule,
     MongooseModule.forFeature([{ name: ILink.name, schema: LinkSchema }]),
+    MongooseModule.forFeature([{ name: IHistory.name, schema: HistorySchema }]),
   ],
 })
 export class ViewModule {}
