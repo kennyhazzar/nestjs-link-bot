@@ -58,27 +58,32 @@ export class LinkService {
     ip?: string,
   ): Promise<string> | null {
     try {
-      const link = await this.linkModel.findOne({ shortId });
+      const clearIp = ip.split(':');
+
+      const [link, { data }] = await Promise.all([
+        await this.linkModel.findOne({ shortId }),
+        await axios.get<UserLocationDto>(
+          `https://ipwho.is/${clearIp[clearIp.length - 1]}`,
+        ),
+      ]);
+
       if (!link) {
         return null;
       }
 
-      const clearIp = ip.split(':');
-      const { data } = await axios.get<UserLocationDto>(
-        `https://ipwho.is/${clearIp[clearIp.length - 1]}`,
-      );
-
-      new this.historyModel({
-        location: data,
-        visitedAt: Date.now(),
-        shortId: link.shortId,
-        userId: link.userId,
-      }).save();
+      if (data.success) {
+        new this.historyModel({
+          location: data,
+          visitedAt: Date.now(),
+          shortId: link.shortId,
+          userId: link.userId,
+        }).save();
+      }
 
       link.views++;
       link.save();
 
-      if (link.isSub && link.userId) {
+      if (link.isSub && link.userId && data.success) {
         this.bot.telegram.sendMessage(
           link.userId,
           `По вашей ссылке прошли!\n🗺️ Место: \`${data.city}\`, \`${data.country}\` (IP = \`${data.ip}\`)\n ` +
@@ -88,7 +93,8 @@ export class LinkService {
             disable_web_page_preview: true,
           },
         );
-        await this.bot.telegram.sendLocation(
+
+        this.bot.telegram.sendLocation(
           link.userId,
           data.latitude,
           data.longitude,
