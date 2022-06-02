@@ -2,7 +2,9 @@ import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
 import { LinkController } from 'src/link/link.controller';
 import { LinkService } from 'src/link/link.service';
+import { IHistory } from 'src/models/history.model';
 import { ILink } from 'src/models/link.model';
+import { HistorySchema } from 'src/schemas/history.schema';
 import { LinkSchema } from 'src/schemas/link.schema';
 import { ViewController } from 'src/view/view.controller';
 import { ViewService } from 'src/view/view.service';
@@ -26,6 +28,7 @@ import { ViewByFullUrlWizard } from './wizards/view-by-full-url.wizard';
   ],
   imports: [
     MongooseModule.forFeature([{ name: ILink.name, schema: LinkSchema }]),
+    MongooseModule.forFeature([{ name: IHistory.name, schema: HistorySchema }]),
   ],
 })
 export class TelegramModule {}

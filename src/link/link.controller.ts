@@ -16,9 +16,13 @@ export class LinkController {
   constructor(private linkService: LinkService) {}
 
   @Post('/create')
-  createLink(@Query('link') link, @Res() response: Response) {
+  async createLink(
+    @Query('link') link: string,
+    @Query('userId') userId: number,
+    @Res() response: Response,
+  ) {
     try {
-      return this.linkService.create(link);
+      return this.linkService.create(link, userId);
     } catch (error) {
       return response
         .status(500)

@@ -14,6 +14,8 @@ import { TelegramModule } from './telegram/telegram.module';
 import { TelegrafModule } from 'nestjs-telegraf';
 import { session } from 'telegraf';
 import { AppController } from './app.controller';
+import { HistorySchema } from './schemas/history.schema';
+import { IHistory } from './models/history.model';
 
 @Module({
   imports: [
@@ -26,6 +28,7 @@ import { AppController } from './app.controller';
     MongooseModule.forRoot(process.env.MONGODB_URI),
     ViewModule,
     MongooseModule.forFeature([{ name: ILink.name, schema: LinkSchema }]),
+    MongooseModule.forFeature([{ name: IHistory.name, schema: HistorySchema }]),
     TelegramModule,
     TelegrafModule.forRoot({
       token: process.env.TELEGRAM_TOKEN,

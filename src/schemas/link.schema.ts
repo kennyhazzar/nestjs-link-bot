@@ -10,10 +10,10 @@ export class Link {
   title: string;
 
   @Prop({ required: false, text: true })
-  subTitle: string;
+  subTitle?: string;
 
   @Prop({ required: false, text: true, index: true })
-  description: string;
+  description?: string;
 
   @Prop({ required: false })
   picture?: string;
@@ -29,8 +29,15 @@ export class Link {
 
   @Prop({ required: true })
   isSub: boolean;
+
   @Prop({ required: false })
-  userId: number;
+  userId?: number;
+
+  @Prop({ required: false })
+  createdAt: number;
+
+  @Prop({ required: false })
+  updatedAt: number;
 }
 
 export const LinkSchema = SchemaFactory.createForClass(Link);

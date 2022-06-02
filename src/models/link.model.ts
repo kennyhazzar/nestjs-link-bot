@@ -8,4 +8,6 @@ export class ILink {
   views: number;
   readonly isSub?: boolean;
   readonly userId?: number;
+  readonly createdAt?: number;
+  readonly updatedAt?: number;
 }

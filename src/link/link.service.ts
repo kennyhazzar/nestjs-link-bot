@@ -10,15 +10,18 @@ import { InjectBot } from 'nestjs-telegraf';
 import { Context, Telegraf } from 'telegraf';
 import { UserLocationDto } from './dto/location.dto';
 import { SubscribeDto } from './dto/subscribe.dto';
+import { IHistory } from 'src/models/history.model';
+import { HistoryDocument } from 'src/schemas/history.schema';
 
 @Injectable()
 export class LinkService {
   constructor(
     @InjectModel(ILink.name) private linkModel: Model<LinkDocument>,
+    @InjectModel(IHistory.name) private historyModel: Model<HistoryDocument>,
     @InjectBot() private bot: Telegraf<Context>,
   ) {}
 
-  async create(url: string, userId?: number) {
+  async create(url: string, userId?: number): Promise<ILink> {
     const root = parse((await axios.get<string>(url)).data);
     const title = root.getElementsByTagName('title')[0].innerText;
     const subTitle = root
@@ -31,6 +34,8 @@ export class LinkService {
       subTitle,
       userId,
       isSub: false,
+      createdAt: Date.now(),
+      updatedAt: Date.now(),
     });
     return createdLink.save();
   }
@@ -58,27 +63,37 @@ export class LinkService {
         return null;
       }
 
-      if (link.isSub && link.userId) {
-        const clearIp = ip.split(':');
+      const clearIp = ip.split(':');
+      const { data } = await axios.get<UserLocationDto>(
+        `https://ipwho.is/${clearIp[clearIp.length - 1]}`,
+      );
 
-        const {
-          data: { city, country, latitude, longitude, ip: apiIp },
-        } = await axios.get<UserLocationDto>(
-          `https://ipwho.is/${clearIp[clearIp.length - 1]}`,
-        );
+      new this.historyModel({
+        location: data,
+        visitedAt: Date.now(),
+        shortId: link.shortId,
+        userId: link.userId,
+      }).save();
+
+      link.views++;
+      link.save();
+
+      if (link.isSub && link.userId) {
         this.bot.telegram.sendMessage(
           link.userId,
-          `По вашей ссылке прошли!\n🗺️ Место: \`${city}\`, \`${country}\` (IP = \`${apiIp}\`)\n📱💻 Устройство:\n\`${userAgent}\`\n🔗 Ссылка: ${process.env.HOST}/${shortId}`,
+          `По вашей ссылке прошли!\n🗺️ Место: \`${data.city}\`, \`${data.country}\` (IP = \`${data.ip}\`)\n ` +
+            `📱💻 Устройство:\n\`${userAgent}\`\n🔗 Ссылка: ${process.env.HOST}/${shortId}`,
           {
             parse_mode: 'Markdown',
             disable_web_page_preview: true,
           },
         );
-        await this.bot.telegram.sendLocation(link.userId, latitude, longitude);
+        await this.bot.telegram.sendLocation(
+          link.userId,
+          data.latitude,
+          data.longitude,
+        );
       }
-
-      link.views++;
-      link.save();
 
       return link.url;
     } catch (error) {
@@ -91,7 +106,7 @@ export class LinkService {
     if (link) {
       await this.linkModel.updateOne(
         { shortId },
-        { $set: { isSub: !link.isSub } },
+        { $set: { isSub: !link.isSub, updatedAt: Date.now() } },
       );
       return { result: true, state: !link.isSub };
     }
