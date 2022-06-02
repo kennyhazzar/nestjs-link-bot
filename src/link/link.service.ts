@@ -58,6 +58,10 @@ export class LinkService {
     ip?: string,
   ): Promise<string> | null {
     try {
+      if (userAgent === 'TelegramBot (like TwitterBot)') {
+        return null;
+      }
+
       const clearIp = ip.split(':');
 
       const [link, { data }] = await Promise.all([
