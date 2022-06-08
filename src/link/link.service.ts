@@ -65,8 +65,8 @@ export class LinkService {
       const clearIp = ip.split(':');
 
       const [link, { data }] = await Promise.all([
-        await this.linkModel.findOne({ shortId }),
-        await axios.get<UserLocationDto>(
+        this.linkModel.findOne({ shortId }),
+        axios.get<UserLocationDto>(
           `https://ipwho.is/${clearIp[clearIp.length - 1]}`,
         ),
       ]);

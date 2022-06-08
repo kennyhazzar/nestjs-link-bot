@@ -39,4 +39,4 @@ import { RouterModule } from '@nestjs/core';
   controllers: [LinkController, ViewController, AppController],
   providers: [LinkService, ViewService],
 })
-export class AppModule { }
+export class AppModule {}

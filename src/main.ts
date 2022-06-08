@@ -1,10 +1,9 @@
 import { NestFactory } from '@nestjs/core';
-import { DocumentBuilder } from '@nestjs/swagger';
+import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { AppModule } from './app.module';
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
-  await app.listen(process.env.PORT || 3000);
+  const app = await NestFactory.create(AppModule, { cors: true });
 
   const config = new DocumentBuilder()
     .setTitle('Short-Link-Bot-API')
@@ -12,5 +11,10 @@ async function bootstrap() {
     .setVersion('1.0')
     .addTag('links')
     .build();
+
+  const document = SwaggerModule.createDocument(app, config);
+  SwaggerModule.setup('docs', app, document);
+
+  await app.listen(process.env.PORT || 3000);
 }
 bootstrap();

@@ -13,7 +13,7 @@ import { LinkService } from './link.service';
 
 @Controller('/api/link')
 export class LinkController {
-  constructor(private linkService: LinkService) { }
+  constructor(private linkService: LinkService) {}
 
   @Post('/create')
   async createLink(

@@ -1,11 +1,4 @@
-import {
-  Controller,
-  Get,
-  Param,
-  Post,
-  Redirect,
-  Res,
-} from '@nestjs/common';
+import { Controller, Get, Param, Post, Redirect, Res } from '@nestjs/common';
 import { Response } from 'express';
 import { LinkService } from 'src/link/link.service';
 import { ViewService } from './view.service';
@@ -15,7 +8,7 @@ export class ViewController {
   constructor(
     private readonly viewService: ViewService,
     private readonly linkService: LinkService,
-  ) { }
+  ) {}
 
   @Get('view')
   async getText(
